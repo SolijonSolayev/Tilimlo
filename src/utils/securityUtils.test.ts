@@ -6,7 +6,7 @@ import {
   redactSensitiveMetadata,
   createCookieConsent,
   parseCookieConsent
-} from './securityUtils.ts';
+} from './securityUtils';
 
 test('isBlockedDevToolsShortcut blocks F12 by key, code, and keyCode', () => {
   assert.equal(isBlockedDevToolsShortcut({ key: 'F12' }).blocked, true);

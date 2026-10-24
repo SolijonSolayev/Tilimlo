@@ -2,7 +2,6 @@ import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI, Type, GenerateContentResponse, ThinkingLevel } from '@google/genai';
 import {
   normalizeToNewUzbekLatin,
@@ -11,8 +10,8 @@ import {
   analyzeSingleUzbekWord,
   convertFromNewUzbekLatin,
   syllabifyUzbekWord
-} from './src/utils/uzbekLinguistics.ts';
-import { sanitizeUserInput } from './src/utils/securityUtils.ts';
+} from './src/utils/uzbekLinguistics';
+import { sanitizeUserInput } from './src/utils/securityUtils';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -230,7 +229,7 @@ function buildLocalChatFallback(
       const m = analyzeSingleUzbekWord(tok);
       const sufText =
         m.suffixes.length > 0
-          ? `özak: "${m.root}" + qöşimça: ${m.suffixes.map((s) => `-${s.suffix} (${s.category})`).join(', ')}`
+          ? `özak: "${m.root}" + qöşimça: ${m.suffixes.map((s) => `-${s.suffix} (${s.meaning})`).join(', ')}`
           : `tub söz ("${m.root}")`;
       return `• ${m.newLatin} [Eski: ${m.oldLatin} · Kirill: ${m.cyrillic} · Böğin: ${m.syllables}] — ${sufText}`;
     });
@@ -267,13 +266,13 @@ function buildLocalChatFallback(
   };
 }
 
-async function startServer() {
+export function createApiApp() {
   const app = express();
 
   // Hide server fingerprint
   app.disable('x-powered-by');
 
-  // Security headers middleware (compatible with AI Studio preview iframe)
+  // Security headers middleware (compatible with AI Studio preview iframe & Vercel)
   app.use((req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-XSS-Protection', '1; mode=block');
@@ -287,7 +286,7 @@ async function startServer() {
       const clientIp =
         (typeof req.headers['x-forwarded-for'] === 'string'
           ? req.headers['x-forwarded-for'].split(',')[0]
-          : req.socket.remoteAddress) || 'unknown';
+          : req.socket?.remoteAddress) || 'unknown';
       if (isRateLimited(clientIp)) {
         res.status(429).json({
           error: 'Sörovlar soni me’yordan oşdi. Iltimos, bir daqiqadan söng qayta urinib köring.'
@@ -299,6 +298,11 @@ async function startServer() {
   });
 
   app.use(express.json({ limit: '512kb' }));
+
+  // GET /api/health
+  app.get('/api/health', (_req, res) => {
+    res.json({ status: 'ok', runtime: process.env.VERCEL ? 'vercel' : 'node' });
+  });
 
   // POST /api/ai/chat
   app.post('/api/ai/chat', async (req, res) => {
@@ -694,7 +698,14 @@ ${urlsXml}
     res.type('application/xml').send(xml);
   });
 
+  return app;
+}
+
+const app = createApiApp();
+
+async function startStandaloneServer() {
   if (process.env.NODE_ENV !== 'production') {
+    const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa'
@@ -714,4 +725,8 @@ ${urlsXml}
   });
 }
 
-startServer();
+if (!process.env.VERCEL) {
+  startStandaloneServer();
+}
+
+export default app;

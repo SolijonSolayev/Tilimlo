@@ -114,6 +114,13 @@ npm run build
 npm start
 ```
 
+### 6. Vercel’ga joylashtirish (Deploy to Vercel)
+Loyiha **Vercel** platformasida to‘liq ishlashga moslashtirilgan (`vercel.json` va `api/index.ts` Serverless Function orqali):
+1. Loyihani GitHub repozitoriyangizga yuklang (`git push`).
+2. [Vercel](https://vercel.com) panelida **Add New Project** tugmasini bosib, GitHub repozitoriyani tanlang (`vercel.json` orqali `Framework: Vite`, `Build Command: npm run build`, `Output Directory: dist` avtomatik o‘rnatiladi).
+3. **Environment Variables** bo‘limiga (ixtiyoriy) `GEMINI_API_KEY` kalitini qo‘shing.
+4. **Deploy** tugmasini bosing — statik frontend hamda `/api/*` Serverless endpointlar avtomatik ishga tushadi.
+
 ---
 
 ## Avtomatlashtirilgan Testlar (Unit Tests)
@@ -136,6 +143,8 @@ Testlar qamrovi:
 ## Loyiha Tuzilmasi (Project Structure)
 
 ```text
+├── api/
+│   └── index.ts                 # Vercel Serverless Function kirish nuqtasi (/api/*)
 ├── public/
 │   ├── favicon.svg              # TilImlo vektor logotipi
 │   ├── og-banner.svg            # Ijtimoiy tarmoqlar uchun OpenGraph banneri
@@ -163,6 +172,7 @@ Testlar qamrovi:
 │   ├── index.css                           # Tailwind v4 va zamonaviy apparat-tezlashtirilgan animatsiyalar
 │   └── main.tsx                            # React kirish nuqtasi
 ├── server.ts                               # Express server, xavfsizlik sarlavhalari va AI API proxy
+├── vercel.json                             # Vercel build, outputDirectory (dist) va API rewrite sozlamasi
 ├── index.html                              # SEO meta-teglar va JSON-LD Schema.org strukturasi
 └── package.json
 ```

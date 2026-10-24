@@ -190,24 +190,34 @@ export const AiLinguistChatView: React.FC<AiLinguistChatViewProps> = ({
         };
         setMessages((prev) => [...prev, modelTurn]);
       } else {
+        const fallbackText =
+          `Savolingiz («${cleanText}») 2026-yilgi yangilangan özbek lotin alifbosi (Ö, Ğ, Ş, Ç va ’) asosida qabul qilindi.\n\n` +
+          `• Yangi alifboda O‘→Ö, G‘→Ğ, Sh→Ş, Ch→Ç harflari “bir tovuş — bir harf” tamoyili asosida yoziladi;\n` +
+          `• Arabça özlaşmalardagi tutuq belgisi (’ — ma’no, ta’lim, san’at) saqlanib qoladi.`;
         setMessages((prev) => [
           ...prev,
           {
-            id: `model-err-${Date.now()}`,
+            id: `model-fallback-${Date.now()}`,
             role: 'model',
-            text: 'Suhbat serveri bilan boğlanişda xatolik yuz berdi. Iltimos, qaytadan urinib köring.',
-            timestamp: 'Hozir'
+            text: fallbackText,
+            modeLabel: MODE_LABELS[modelMode],
+            timestamp: new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })
           }
         ]);
       }
     } catch (_err) {
+      const fallbackText =
+        `Savolingiz («${cleanText}») böyiça lokal tilşunoslik tahlili:\n\n` +
+        `• 2026-yilgi yangilangan özbek lotin alifbosida Ö, Ğ, Ş, Ç harflari apostrof va harf birikmalarining örnini bosadi;\n` +
+        `• Sözlarning özak va qöşimça tahlilini "02. Morfologik Tahlil" bölimida grafik şaklda körişingiz mumkin.`;
       setMessages((prev) => [
         ...prev,
         {
-          id: `model-err-${Date.now()}`,
+          id: `model-fallback-${Date.now()}`,
           role: 'model',
-          text: 'Tarmoq xatoligi yuz berdi. Savolingizni qayta yuboring.',
-          timestamp: 'Hozir'
+          text: fallbackText,
+          modeLabel: MODE_LABELS[modelMode],
+          timestamp: new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })
         }
       ]);
     } finally {
