@@ -1,0 +1,6 @@
+{
+  "name": "ÖzbekAlifbo 2026 — Yangilangan Özbek Alifbosi Tarjimoni va Luğati",
+  "description": "2026-yilgi yangilangan özbek lotin alifbosi (Ö, Ğ, Ş, Ç) asosida matn va ovozli tarjimon, imlo xatolarini tekşiruvçi, matn tahlilçisi, uch yozuvli luğat hamda interaktiv öquv maşqlari platformasi.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
