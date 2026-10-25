@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "Tilimlo",
+  "description": "Yangilangan O‘zbek lotin alifbosi tarjimoni, morfologik tahlil va AI platformasi.",
+  "version": "1.0.0",
+  "type": "ai-application",
+  "repository": "https://github.com/SolijonSolayev/Tilimlo",
+  "homepage": "https://tilimlo.uz",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Solijon Solayev",
+      "email": ""
+    }
+  ],
+  "keywords": [
+    "uzbek",
+    "latin-alphabet",
+    "translation",
+    "spelling-check",
+    "morphology",
+    "ai",
+    "linguistics"
+  ],
+  "resources": [
+    {
+      "name": "Three-script translator",
+      "type": "tool",
+      "description": "Converts text between 2026 Latin, 1995 Latin, and Cyrillic scripts."
+    },
+    {
+      "name": "Morphology analyzer",
+      "type": "tool",
+      "description": "Breaks Uzbek words into stems and affixes and visualizes morphology."
+    },
+    {
+      "name": "AI linguist assistant",
+      "type": "agent",
+      "description": "Provides advice on Uzbek spelling, alphabet reform, morphology, and language rules."
+    }
+  ]
+}
