@@ -9,4 +9,4 @@ coverage/
 bun.lock
 bun.lockb
 .vercel
-
+.aistudio
